@@ -1,0 +1,25 @@
+zkServer.sh start
+kafka-server-start.bat C:\Users\Tuan_Nguyen1\Desktop\learning\kafka\kafka_2.12-2.8.0\config\server.properties
+kafka-topics.bat --list --zookeeper localhost:2181
+
+kafka-topics.bat --zookeeper localhost:2181 --topic order.created --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic order.rejected --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic inventory.processed --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic inventory.invalidated --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic payment.approved --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic payment.rejected --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic invoice.approved --create --partitions 1 --replication-factor 1
+
+
+
+kafka-topics.bat --zookeeper localhost:2181 --topic inventory.request --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic payment.request --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic invoice.request --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic order.reply --create --partitions 1 --replication-factor 1
+kafka-topics.bat --zookeeper localhost:2181 --topic order.cancel --create --partitions 1 --replication-factor 1
+
+kafka-console-consumer.bat --bootstrap-server localhost:9092 --topic order.created --from-beginning --max-messages 100
+kafka-topics.bat --delete --zookeeper localhost:2181 --topic order.created
+
+docker run -p 7001:8080 -e KAFKA_CLUSTERS_0_NAME=local -e KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS=192.168.80.35:9092 -d provectuslabs/kafka-ui:latest
+docker run --restart=always -it --add-host kafka:192.168.80.35 -d -p 9000:9000 -e KAFKA_BROKERCONNECT=192.168.80.35:9092 -e JVM_OPTS="-Xms32M -Xmx64M" -e SERVER_SERVLET_CONTEXTPATH="/" obsidiandynamics/kafdrop

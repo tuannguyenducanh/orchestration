@@ -1,0 +1,37 @@
+server:
+  port: 0
+  servlet:
+    context-path: /invoice-service/v1
+spring:
+  application:
+    name: invoice-service
+  datasource:
+    url: jdbc:mysql://localhost:3306/invoice?useSSL=false
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: none
+  sql:
+    init:
+      mode: never
+#      mode: always
+  kafka:
+    consumer:
+      group-id: com.example.invoice
+      bootstrap-servers: localhost:9092
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+    producer:
+      bootstrap-servers: localhost:9092
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA_URI:http://localhost:8761/eureka}
+  instance:
+    instanceId: ${spring.application.name}:${random.int[1,999999]}
